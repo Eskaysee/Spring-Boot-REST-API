@@ -1,6 +1,7 @@
 package SpringBootFramwork.RESTAPI.controllers;
 
 import SpringBootFramwork.RESTAPI.beans.User;
+import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import SpringBootFramwork.RESTAPI.services.UserDaoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,10 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User findById(@PathVariable int id) {
-        return service.findById(id);
+        User usr = service.findById(id);
+        if (usr == null)
+            throw new UserNotFoundException("id:" + id);
+        return usr;
     }
 
     @PostMapping("/users")

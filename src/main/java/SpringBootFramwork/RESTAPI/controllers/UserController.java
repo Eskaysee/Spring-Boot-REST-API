@@ -3,6 +3,7 @@ package SpringBootFramwork.RESTAPI.controllers;
 import SpringBootFramwork.RESTAPI.beans.User;
 import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import SpringBootFramwork.RESTAPI.services.UserDaoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,9 +34,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         service.save(user);
-        //Return URL pf created resource
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

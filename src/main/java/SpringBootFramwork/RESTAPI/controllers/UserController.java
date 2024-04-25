@@ -4,6 +4,8 @@ import SpringBootFramwork.RESTAPI.beans.User;
 import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import SpringBootFramwork.RESTAPI.services.UserDaoService;
 import jakarta.validation.Valid;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,16 +23,20 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return service.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public User findById(@PathVariable int id) {
+    public EntityModel<User> findUserById(@PathVariable int id) {
         User usr = service.findById(id);
         if (usr == null)
             throw new UserNotFoundException("id:" + id);
-        return usr;
+
+        EntityModel<User> model = EntityModel.of(usr);
+        WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).findAllUsers());
+        model.add(link.withRel("all-users"));
+        return model;
     }
 
     @PostMapping("/users")
@@ -45,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public boolean deleteById(@PathVariable int id) {
+    public boolean deleteUserById(@PathVariable int id) {
         return service.deleteById(id);
     }
 }

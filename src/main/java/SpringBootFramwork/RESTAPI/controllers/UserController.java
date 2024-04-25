@@ -3,10 +3,14 @@ package SpringBootFramwork.RESTAPI.controllers;
 import SpringBootFramwork.RESTAPI.beans.User;
 import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import SpringBootFramwork.RESTAPI.services.UserDaoService;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import jakarta.validation.Valid;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,8 +27,13 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> findAllUsers() {
-        return service.findAll();
+    public MappingJacksonValue findAllUsers() {
+        List<User> usersList = service.findAll();
+        MappingJacksonValue mjv = new MappingJacksonValue(usersList);
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "Birth Date");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("UserFilter", filter);
+        mjv.setFilters(filters);
+        return mjv;
     }
 
     @GetMapping("/users/{id}")

@@ -1,5 +1,6 @@
 package SpringBootFramwork.RESTAPI.beans;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,16 +9,15 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-@JsonIgnoreProperties({"id"})       //dependent on the variable name. Will need to be updated with variable name changes
+@JsonFilter("UserFilter")
 public class User {
 
     private int id;
 
-    @JsonProperty("Full Name")          //Customizes the field name in the response
     @Size(min = 2, message = "Name should have at least 2 characters")
     private String name;
 
-    @JsonIgnore         //removes this field from response. Useful for passwords
+    @JsonProperty("Birth Date")
     @Past(message = "Birth date should be in the past")
     private LocalDate birthDate;
 

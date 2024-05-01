@@ -1,7 +1,6 @@
 package SpringBootFramwork.RESTAPI.controllers;
 
 import SpringBootFramwork.RESTAPI.entities.User;
-import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import SpringBootFramwork.RESTAPI.services.UserDto;
 import SpringBootFramwork.RESTAPI.services.UserService;
 import jakarta.validation.Valid;
@@ -40,9 +39,6 @@ public class UserController {
     @GetMapping("/users/{id}")
     public EntityModel<UserDto> findUserById(@PathVariable long id) {
         UserDto usr = userService.search(id);
-        if (usr == null)
-            throw new UserNotFoundException("id:" + id);
-
         EntityModel<UserDto> model = EntityModel.of(usr);
         WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getAllUsers());
         model.add(link.withRel("all-users"));

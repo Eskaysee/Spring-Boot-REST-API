@@ -1,8 +1,8 @@
 package SpringBootFramwork.RESTAPI.services;
 
 import SpringBootFramwork.RESTAPI.entities.User;
+import SpringBootFramwork.RESTAPI.mappers.UserMapper;
 import SpringBootFramwork.RESTAPI.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    
-    @Autowired
-    private ModelMapper modelMapper;
 
 //    private static List<User> users = new ArrayList<>();
 //
@@ -36,17 +33,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return userRepository.findAll().stream().map(this::convertToUserDto).toList();
+        return userRepository.findAll().stream().map(UserMapper.INSTANCE::userToUserDto).toList();
     }
 
     @Override
     public UserDto search(Long id) {
-        return convertToUserDto(userRepository.findById(id).get());
+        return UserMapper.INSTANCE.userToUserDto(userRepository.findById(id).get());
     }
 
     @Override
     public User insert(UserDto userDto) {
-        User usr = convertToUserEntity(userDto);
+        User usr = UserMapper.INSTANCE.userDtoToUser(userDto);
         return userRepository.save(usr);
     }
 
@@ -54,15 +51,5 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).get();
         userRepository.delete(user);
-    }
-
-    @Override
-    public UserDto convertToUserDto(User user) {
-        return modelMapper.map(user, UserDto.class);
-    }
-
-    @Override
-    public User convertToUserEntity(UserDto userDto) {
-        return modelMapper.map(userDto, User.class);
     }
 }

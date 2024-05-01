@@ -13,8 +13,4 @@ public interface UserService {
     User insert(UserDto userDto);
 
     void deleteUser(Long id);
-
-    UserDto convertToUserDto(User user);
-
-    User convertToUserEntity(UserDto userDto);
 }

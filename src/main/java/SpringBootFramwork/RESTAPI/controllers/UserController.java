@@ -1,56 +1,57 @@
 package SpringBootFramwork.RESTAPI.controllers;
 
-import SpringBootFramwork.RESTAPI.beans.User;
+import SpringBootFramwork.RESTAPI.entities.User;
 import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
-import SpringBootFramwork.RESTAPI.services.UserDaoService;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import SpringBootFramwork.RESTAPI.services.UserDto;
+import SpringBootFramwork.RESTAPI.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class UserController {
 
-    private UserDaoService service;
-
-    public UserController(UserDaoService service) {
-        this.service = service;
-    }
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/users")
-    public MappingJacksonValue findAllUsers() {
-        List<User> usersList = service.findAll();
-        MappingJacksonValue mjv = new MappingJacksonValue(usersList);
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "Birth Date");
-        FilterProvider filters = new SimpleFilterProvider().addFilter("UserFilter", filter);
-        mjv.setFilters(filters);
-        return mjv;
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> usersList = userService.getAll();
+        return new ResponseEntity<>(usersList, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<User> findUserById(@PathVariable int id) {
-        User usr = service.findById(id);
+    public EntityModel<UserDto> findUserById(@PathVariable long id) {
+        UserDto usr = userService.search(id);
         if (usr == null)
             throw new UserNotFoundException("id:" + id);
 
-        EntityModel<User> model = EntityModel.of(usr);
-        WebMvcLinkBuilder link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).findAllUsers());
+        EntityModel<UserDto> model = EntityModel.of(usr);
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getAllUsers());
         model.add(link.withRel("all-users"));
         return model;
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        service.save(user);
+    public ResponseEntity<User> addUser(@Valid @RequestBody UserDto userDto) {
+        User user = userService.insert(userDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public boolean deleteUserById(@PathVariable int id) {
-        return service.deleteById(id);
+    public void removeUser(@PathVariable long id) {
+        userService.deleteUser(id);
     }
 }

@@ -1,6 +1,5 @@
 package SpringBootFramwork.RESTAPI.exceptionHandler;
 
-import SpringBootFramwork.RESTAPI.beans.User;
 import SpringBootFramwork.RESTAPI.exceptions.ErrorDetails;
 import SpringBootFramwork.RESTAPI.exceptions.UserNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

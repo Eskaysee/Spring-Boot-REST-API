@@ -1,4 +1,4 @@
-package SpringBootFramwork.RESTAPI.beans;
+package SpringBootFramwork.RESTAPI.entities;
 
 public class Post {
 

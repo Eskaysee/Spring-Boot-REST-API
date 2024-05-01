@@ -1,6 +1,6 @@
 package SpringBootFramwork.RESTAPI.services;
 
-import SpringBootFramwork.RESTAPI.beans.Post;
+import SpringBootFramwork.RESTAPI.entities.Post;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

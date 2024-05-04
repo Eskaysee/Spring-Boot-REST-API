@@ -1,8 +1,10 @@
 package SpringBootFramwork.RESTAPI.controllers;
 
+import SpringBootFramwork.RESTAPI.entities.Post;
 import SpringBootFramwork.RESTAPI.entities.User;
+import SpringBootFramwork.RESTAPI.services.PostDto;
 import SpringBootFramwork.RESTAPI.services.UserDto;
-import SpringBootFramwork.RESTAPI.services.UserService;
+import SpringBootFramwork.RESTAPI.services.SocialMediaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -25,20 +27,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-public class UserController {
+public class SocialMediaController {
 
     @Autowired
-    private UserService userService;
+    private SocialMediaService socialMediaService;
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> usersList = userService.getAll();
+        List<UserDto> usersList = socialMediaService.getAll();
         return new ResponseEntity<>(usersList, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
     public EntityModel<UserDto> findUserById(@PathVariable long id) {
-        UserDto usr = userService.search(id);
+        UserDto usr = socialMediaService.search(id);
         EntityModel<UserDto> model = EntityModel.of(usr);
         WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getAllUsers());
         model.add(link.withRel("all-users"));
@@ -46,8 +48,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@Valid @RequestBody UserDto userDto) {
-        User user = userService.insert(userDto);
+    public ResponseEntity<UserDto> addUser(@Valid @RequestBody UserDto userDto) {
+        User user = socialMediaService.insert(userDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -58,6 +60,23 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public void removeUser(@PathVariable long id) {
-        userService.deleteUser(id);
+        socialMediaService.deleteUser(id);
+    }
+
+    @GetMapping("/users/{id}/posts")
+    public ResponseEntity<List<PostDto>> getAllUserPosts(@PathVariable long id) {
+        List<PostDto> posts = socialMediaService.getAllPostsByUser(id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @PostMapping("/users/{id}/posts")
+    public  ResponseEntity<PostDto> addPost(@PathVariable long id, @Valid @RequestBody PostDto postDto) {
+        Post post = socialMediaService.savePost(id, postDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 }

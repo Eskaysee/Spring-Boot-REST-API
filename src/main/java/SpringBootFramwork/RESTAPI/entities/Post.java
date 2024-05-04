@@ -1,36 +1,19 @@
 package SpringBootFramwork.RESTAPI.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter @Setter
 public class Post {
 
-    private int id;
+    @GeneratedValue
+    private @Id Long id;
     private String description;
-
-    public Post(int id, String description) {
-        this.id = id;
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                '}';
-    }
+    @ManyToOne
+    private User user;
 }

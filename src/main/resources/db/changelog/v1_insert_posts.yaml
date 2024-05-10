@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Sihle-Calana
+      changes:
+        - loadData:
+            file: /csv/v1_insert_into_post.csv
+            separator: ;
+            quotchar: '"'
+            header: true
+            relativeToChangelogFile: true
+            encoding: UTF-8
+            tableName: post
+            columns:
+              - column:
+                  name: description
+                  type: STRING
+              - column:
+                  name: user_id
+                  type: NUMERIC

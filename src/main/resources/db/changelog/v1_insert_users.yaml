@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Sihle-Calana
+      changes:
+        - loadData:
+            file: /csv/v1_insert_into_user_details.csv
+            separator: ;
+            relativeToChangelogFile: true
+            encoding:  UTF-8
+            usePreparedStatements: true
+            tableName: user_details
+            header: true
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+              - column:
+                  name: birth_date
+                  type: DATE
+              - column:
+                  name: email
+                  type: STRING

@@ -7,15 +7,15 @@ VALUES
 (14, 'David', '2001-05-01', 'david@telkomsa.net');
 
 INSERT IGNORE INTO post(id, description, user_id)
-VALUES (11, 'I want to learn Spring Boot', 1),
-(12, 'I want to learn Django', 2),
-(13, 'I want to program in Python', 2),
-(14, 'I want to learn dotNet', 3),
-(15, 'I want to program in C Sharp', 3),
-(16, 'I want to learn DevOps', 4),
-(17, 'I want to program in Java', 1),
-(18, 'I want to use Docker, Kubernetes & Terraform', 4),
-(19, 'I can''t decide between Azure or AWS.', 4);
+VALUES (11, 'I want to learn Spring Boot', 11),
+(12, 'I want to learn Django', 12),
+(13, 'I want to program in Python', 12),
+(14, 'I want to learn dotNet', 13),
+(15, 'I want to program in C Sharp', 13),
+(16, 'I want to learn DevOps', 14),
+(17, 'I want to program in Java', 11),
+(18, 'I want to use Docker, Kubernetes & Terraform', 14),
+(19, 'I can''t decide between Azure or AWS.', 14);
 
 --ALTER SEQUENCE user_details_seq RESTART WITH 54;
 --ALTER SEQUENCE post_seq RESTART WITH 59;

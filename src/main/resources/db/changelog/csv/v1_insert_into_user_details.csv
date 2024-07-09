@@ -1,5 +1,4 @@
-id;name;birth_date;email
-11;Alice;2006-04-01;ally@gmail.com
-12;Bobby;2003-08-06;bob@outlook.com
-13;Catherine;1999-04-24;cathy@yahooo.com
-14;David;2001-05-01;dave@telkomsa.net
+name;birth_date;email
+Alice;2006-04-01;ally@gmail.com
+Bobby;2003-08-06;bob@outlook.com
+Catherine;1999-04-24;cathy@yahooo.com

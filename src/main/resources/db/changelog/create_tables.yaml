@@ -23,6 +23,13 @@ databaseChangeLog:
               - column:
                   name:  email
                   type:  varchar(255)
+        - loadData:
+            file: /csv/v1_insert_into_user_details.csv
+            separator: ;
+            relativeToChangelogFile: true
+            encoding: UTF-8
+            usePreparedStatements: true
+            tableName: user_details
 
   - changeSet:
       id:  2
@@ -51,3 +58,10 @@ databaseChangeLog:
                     nullable:  false
                     foreignKeyName:  fk_post_user
                     references:  user_details(id)
+        - loadData:
+            file: /csv/v1_insert_into_post.csv
+            separator: ;
+            quotchar: '"'
+            relativeToChangelogFile: true
+            encoding: UTF-8
+            tableName: post

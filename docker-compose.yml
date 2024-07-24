@@ -6,13 +6,14 @@ services:
     ports:
       - "8085:8082"
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATA_URL}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-#      SPRING_SECURITY_USER_USERNAME: ${SECURITY_USERNAME}
-#      SPRING_SECURITY_USER_PASSWORD: ${SECURITY_PASSWORD}
+      SPRING_SECURITY_USER_USERNAME: ${SECURITY_USERNAME}
+      SPRING_SECURITY_USER_PASSWORD: ${SECURITY_PASSWORD}
     networks:
       - socials-network
 
@@ -25,11 +26,16 @@ services:
       MYSQL_DATABASE: ${SOCIALS_DB}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     volumes:
       - sm-data:/var/lib/mysql
     networks:
       - socials-network
-      
+
 volumes:
   sm-data:
 
